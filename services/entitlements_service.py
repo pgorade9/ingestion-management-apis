@@ -17,11 +17,11 @@ def get_groups(env):
     response = requests.request("GET", url, data=payload, headers=headers, params=querystring)
     if response.status_code == 200:
         response_json = response.json()
-        print(f"{response_json=}")
+        # print(f"{response_json=}")
         return response_json
     else:
-        print(f"Error occurred while fetching entitlements. {response.text}")
-        # exit(1)
+        msg = f"Error occurred while fetching entitlements with {url=}. {response.text}"
+        return {"msg": msg}
 
 
 def get_members_groups(user, env, member_type):
@@ -37,11 +37,11 @@ def get_members_groups(user, env, member_type):
     response = requests.request("GET", url, data=payload, headers=headers, params=params)
     if response.status_code == 200:
         response_json = response.json()
-        print(f"{response_json=}")
+        # print(f"{response_json=}")
         return response_json
     else:
-        print(f"Error occurred while fetching member entitlements groups from {url=}. {response.text}")
-        # exit(1)
+        msg = f"Error occurred while fetching member entitlements groups from {url=}. {response.text}"
+        return {"msg": msg}
 
 
 if __name__ == "__main__":

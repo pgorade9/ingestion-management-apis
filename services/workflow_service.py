@@ -16,7 +16,7 @@ def get_workflows(env):
     response = requests.request("GET", url, data=payload, headers=headers)
     if response.status_code == 200:
         response_json = response.json()
-        print(f"{response_json=}")
+        # print(f"{response_json=}")
         return response_json
     else:
         msg = f"Error occurred while fetching workflows {url=}. {response.text}"
@@ -35,7 +35,7 @@ def get_workflow(env, dag):
     response = requests.request("GET", url, data=payload, headers=headers)
     if response.status_code == 200:
         response_json = response.json()
-        print(f"{response_json=}")
+        # print(f"{response_json=}")
         return response_json
     else:
         msg = f"Error occurred while fetching workflows {url=}. {response.text}"
