@@ -67,7 +67,7 @@ def register_workflow(env, dag):
     response = requests.request("POST", url, headers=headers, json=payload)
     if response.status_code == 200:
         response_json = response.json()
-        print(f"{response_json=}")
+        # print(f"{response_json=}")
         return response_json
     elif response.status_code == 409:
         response_json = response.json()
