@@ -12,7 +12,7 @@ def get_resources(region: str = Query(default="us", enum=["au", "us"]),
                                    enum=keyvault["envs-ltops"] + keyvault["envs"]),
                   data_partition: str = Query(None, description="data-partition",
                                               enum=[keyvault[e]["data_partition_id"] for e in keyvault["envs-ltops"]]),
-                  app_code: str = Query("workflowservices")
+                  app_code: str = Query(default="workflowservices")
                   ):
     return data_partition_registry.fetch_resources(region, env, data_partition=data_partition, app_code=app_code)
 
@@ -23,7 +23,7 @@ def get_resource(region: str = Query(default="us", enum=["au", "us"]),
                                   enum=keyvault["envs-ltops"] + keyvault["envs"]),
                  data_partition: str = Query(None, description="data-partition",
                                              enum=[keyvault[e]["data_partition_id"] for e in keyvault["envs-ltops"]]),
-                 app_code: str = Query("workflowservices"),
+                 app_code: str = Query(default="workflowservices"),
                  resource_key: str = "IP_URL"
                  ):
     return data_partition_registry.fetch_resource(region, env, data_partition=data_partition, app_code=app_code,
