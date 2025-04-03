@@ -3,9 +3,9 @@ from configuration import keyvault
 
 
 def get_token(env: str):
-    if keyvault[env].get("bearer-token") not in [None, ""]:
+    if keyvault.get(env).get("bearer-token") not in [None, ""]:
         return keyvault[env]["bearer-token"]
-    scope = f"{keyvault[env]["scope"]} {keyvault[env]["client_id"]}" if env.startswith('ltops') else keyvault[env][
+    scope = f"{keyvault[env]["scope"]} {keyvault[env]["client_id"]} ccm-data-partition-registry-cfsservice.slbservice.com" if env.endswith('ltops') else keyvault[env][
         "scope"]
     response = requests.request(method="POST",
                                 url=keyvault[env]["token_url"],
@@ -17,5 +17,5 @@ def get_token(env: str):
         response_json = response.json()
         return "Bearer " + response_json["access_token"]
     else:
-        print(f"Error occurred while creating token. {response.text}")
-        exit(1)
+        msg = f"Error occurred while fetching token from {keyvault[env]["token_url"]=}. {response.status_code=} {response.text}"
+        print(f"{msg=}")
