@@ -42,7 +42,7 @@ def fetch_resources(region, env, data_partition, app_code):
         return {"msg": msg}
 
 
-def create_resource(region, resource, env, data_partition, app_code, resource_key):
+def create_resource(resource, region, env, data_partition, app_code, resource_key):
     DNS_HOST = "api.delfi.slb.com" if region == "us" else "eu-api.delfi.slb.com"
     url = f"https://{DNS_HOST}/ccm/dataPartitionRegistry/v2/dataPartitions/{data_partition}/applications/{app_code}/resources/{resource_key}"
     print(f"{resource=}")
