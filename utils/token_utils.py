@@ -1,11 +1,15 @@
 import requests
+
 from configuration import keyvault
 
 
 def get_token(env: str):
     if keyvault.get(env).get("bearer-token") not in [None, ""]:
         return keyvault[env]["bearer-token"]
-    scope = f"{keyvault[env]["scope"]} {keyvault[env]["client_id"]} ccm-data-partition-registry-cfsservice.slbservice.com" if env.endswith('ltops') else keyvault[env][
+    scope_osdu = keyvault[env]["scope"]
+    scope_client_id = keyvault[env]["client_id"]
+    scope_ccm = keyvault["scope_ccm"]
+    scope = f"{scope_osdu} {scope_client_id} {scope_ccm}" if env.endswith('ltops') else keyvault[env][
         "scope"]
     response = requests.request(method="POST",
                                 url=keyvault[env]["token_url"],
