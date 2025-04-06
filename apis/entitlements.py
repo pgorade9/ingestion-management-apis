@@ -10,9 +10,6 @@ ent_router = APIRouter(prefix="/api/entitlements/v2", tags=["entitlement apis"])
 env_list = [key for key in keyvault.keys() if
             isinstance(keyvault[key], dict) and keyvault[key].get("data_partition_id") is not None]
 
-data_partition_list = list({keyvault[key].get("data_partition_id") for key in keyvault.keys() if
-                            isinstance(keyvault[key], dict) and keyvault[key].get("data_partition_id") is not None})
-
 
 @ent_router.get("/groups")
 def get_groups(env: Literal[*env_list] = Query(...)):
