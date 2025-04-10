@@ -26,11 +26,17 @@ def get_workflow(env: Literal[*env_list] = Query(...),
     return workflow_service.get_workflow(env, dag)
 
 
-@workflow_router.post("/workflow}")
+@workflow_router.post("/workflow")
 def register_workflow(env: Literal[*env_list] = Query(...),
                       dag: str = Query(None, enum=["csv_parser_wf_status_gsm",
                                                    "wellbore_ingestion_wf_gsm",
                                                    "doc_ingestor_azure_ocr_wf",
                                                    "shapefile_ingestor_wf_status_gsm",
                                                    "Osdu_ingest"], description="workflow_name")):
+    return workflow_service.register_workflow(env, dag)
+
+
+@workflow_router.post("/other_workflow", description="Register Other Workflows")
+def register_other_workflow(env: Literal[*env_list] = Query(...),
+                            dag: str = Query(...)):
     return workflow_service.register_workflow(env, dag)

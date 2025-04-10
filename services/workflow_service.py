@@ -51,7 +51,7 @@ def register_workflow(env, dag):
         "doc_ingestor_azure_ocr_wf": "Document Ingestion"
     }
     payload = {
-        "description": f"{desc[dag]}",
+        "description": f"{dag if desc.get(dag) is None else desc.get(dag)}",
         "registrationInstructions": {
             "dagContent": "",
             "dagName": dag
