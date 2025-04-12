@@ -9,7 +9,9 @@ def get_token(env: str):
     scope_osdu = keyvault[env]["scope"]
     scope_client_id = keyvault[env]["client_id"]
     scope_ccm = keyvault["scope_ccm"]
-    scope = f"{scope_osdu} {scope_client_id} {scope_ccm}" if env.endswith('ltops') else keyvault[env][
+    scope_ccm_list = keyvault["scope_ccm_list"]
+    scope_endpoint = "e9be745d9a754cf380da64a316a75396"
+    scope = f"{scope_osdu} {scope_client_id} {scope_ccm} {scope_ccm_list} {scope_endpoint}" if env.endswith('ltops') else keyvault[env][
         "scope"]
     response = requests.request(method="POST",
                                 url=keyvault[env]["token_url"],
