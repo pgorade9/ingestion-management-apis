@@ -76,15 +76,15 @@ def get_resource_id(env, endpoint_id):
 
 def exchange_token(env, resource_id):
     subject_token = get_token(env).split()[1]
-    payload = f"grant_type=token-exchange&subject_token={subject_token}&subject_token_type=urn:ietf:params:oauth:token-type:access_token&requested_token_type=urn:ietf:params:oauth:token-type:access_token&resource={resource_id}&client_id={keyvault[env]["client_id"]}&client_secret={keyvault[env]["client_secret"]}"
+    payload = f"grant_type=token-exchange&subject_token={subject_token}&subject_token_type=urn:ietf:params:oauth:token-type:access_token&requested_token_type=urn:ietf:params:oauth:token-type:access_token&resource={resource_id}"
+    encoded_secret = f'{keyvault[env]["client_id"]}:{keyvault[env]["client_secret"]}'.encode("utf-8")
     response = requests.request(method="POST",
-                                url="https://csi.slb.com/v2alpha/token",
-                                headers={"content-type": "application/x-www-form-urlencoded"},
+                                url="https://csi.slb.com/v2/token",
+                                headers={"content-type": "application/x-www-form-urlencoded",
+                                         "Authorization": f"Basic {base64.b64encode(encoded_secret).decode('utf-8')}"},
                                 data=payload)
     if response.status_code == 200:
         response_json = response.json()
-        access_token = response_json.get("access_token")
-        print(f"{access_token=}")
         return response_json
     else:
         print(f"Error occurred. {response.status_code=} {response.text=}")
