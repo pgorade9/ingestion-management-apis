@@ -3,10 +3,10 @@ from typing import Literal
 from fastapi import APIRouter, Query
 
 from configuration import keyvault
-from models.data_models import resource_value
+from models.data_models import ResourceValue
 from services import data_partition_registry
 
-data_partition_router = APIRouter(prefix="/ccm/dataPartitionRegistry/v2", tags=["data partition registry apis"])
+data_partition_router = APIRouter(prefix="/ccm/dataPartitionRegistry/v2", tags=["Data partition registry apis"])
 
 env_list = [key for key in keyvault.keys() if
             isinstance(keyvault[key], dict) and keyvault[key].get("data_partition_id") is not None]
@@ -36,7 +36,7 @@ def get_resource(region: Literal["eu", "us"] = Query(...),
 
 
 @data_partition_router.put("/dataPartitions/{dataPartitionId}/applications/{appCode}/resources/{resourceKey}")
-def put_resource(resource: resource_value,
+def put_resource(resource: ResourceValue,
                  region: Literal["eu", "us"] = Query(...),
                  env: Literal[*env_list] = Query(...),
                  data_partition: Literal[*data_partition_list] = Query(...),

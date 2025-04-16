@@ -5,7 +5,7 @@ from services import entitlements_service
 
 from configuration import keyvault
 
-ent_router = APIRouter(prefix="/api/entitlements/v2", tags=["entitlement apis"])
+ent_router = APIRouter(prefix="/api/entitlements/v2", tags=["Entitlement apis"])
 
 env_list = [key for key in keyvault.keys() if
             isinstance(keyvault[key], dict) and keyvault[key].get("data_partition_id") is not None]

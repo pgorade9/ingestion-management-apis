@@ -5,7 +5,7 @@ from services import legal_tag_service
 
 from configuration import keyvault
 
-legal_router = APIRouter(prefix="/api/legal/v1", tags=["legal tag apis"])
+legal_router = APIRouter(prefix="/api/legal/v1", tags=["Legal tag apis"])
 
 env_list = [key for key in keyvault.keys() if
             isinstance(keyvault[key], dict) and keyvault[key].get("data_partition_id") is not None]

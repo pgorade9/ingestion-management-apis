@@ -5,7 +5,7 @@ from services import workflow_service
 
 from configuration import keyvault
 
-workflow_router = APIRouter(prefix="/api/workflow/v1", tags=["workflow apis"])
+workflow_router = APIRouter(prefix="/api/workflow/v1", tags=["Workflow apis"])
 
 env_list = [key for key in keyvault.keys() if
             isinstance(keyvault[key], dict) and keyvault[key].get("data_partition_id") is not None]

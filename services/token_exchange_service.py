@@ -17,11 +17,11 @@ def get_session(env: str, data_partition_id: str, user_id: str):
         "sToken": base64.b64encode(f"{user_id}:{keyvault[env]['client_id']}:3600".encode("utf-8")).decode("utf-8"),
         "data-partition-id": data_partition_id,
         "secretAuthorization": f"Basic {base64.b64encode(f"{keyvault[env]['client_id']}:{keyvault[env]['client_secret']}".encode("utf-8")).decode("utf-8")}",
-        "audience": f"{keyvault[env]['client_id']} {keyvault[env]['scope']}",
+        # "audience": f"{keyvault[env]['client_id']} {keyvault[env]['scope']}",
         "Authorization": get_token(env),
-        "requestUrl": f"{keyvault[env]['seds_dns_host']}"
+        "requestUrl": f"{keyvault[env]['adme_dns_host']}"
     }
-
+    print(f"{headers=}")
     response = requests.request(method="GET",
                                 url=url,
                                 headers=headers)
