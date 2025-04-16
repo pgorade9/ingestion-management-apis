@@ -10,8 +10,10 @@ token_exchange_router = APIRouter(prefix="/api/workflow/v1/token_exchange", tags
 env_list = [key for key in keyvault.keys() if
             isinstance(keyvault[key], dict) and keyvault[key].get("data_partition_id") is not None]
 
-data_partition_list = list({keyvault[key].get("data_partition_id") for key in keyvault.keys() if
-                            isinstance(keyvault[key], dict) and keyvault[key].get("data_partition_id") is not None})
+data_partition_list = set()
+for key in keyvault.keys():
+    if isinstance(keyvault[key], dict) and keyvault[key].get("data_partition_id") not in [None,""]:
+        data_partition_list.add(*keyvault.get(key).get("data_partitions"))
 
 
 @token_exchange_router.get("/workflow/getSession")

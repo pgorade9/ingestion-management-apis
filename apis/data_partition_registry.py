@@ -11,9 +11,10 @@ data_partition_router = APIRouter(prefix="/ccm/dataPartitionRegistry/v2", tags=[
 env_list = [key for key in keyvault.keys() if
             isinstance(keyvault[key], dict) and keyvault[key].get("data_partition_id") is not None]
 
-data_partition_list = list({keyvault[key].get("data_partition_id") for key in keyvault.keys() if
-                            isinstance(keyvault[key], dict) and keyvault[key].get("data_partition_id") is not None})
-
+data_partition_list = set()
+for key in keyvault.keys():
+    if isinstance(keyvault[key], dict) and keyvault[key].get("data_partition_id") not in [None,""]:
+        data_partition_list.add(*keyvault.get(key).get("data_partitions"))
 
 @data_partition_router.get("/dataPartitions/{dataPartitionId}/applications/{appCode}/resources")
 def get_resources(region: Literal["eu", "us"] = Query(...),
@@ -46,3 +47,11 @@ def put_resource(resource: ResourceValue,
     return data_partition_registry.create_resource(resource, region, env, data_partition=data_partition,
                                                    app_code=app_code,
                                                    resource_key=resource_key)
+
+
+if __name__=="__main__":
+    data_partition_list = set()
+    for key in keyvault.keys():
+        if isinstance(keyvault[key], dict) and keyvault[key].get("data_partition_id") not in [None,""]:
+            data_partition_list.add(*keyvault.get(key).get("data_partitions"))
+    print(f"{data_partition_list=}")

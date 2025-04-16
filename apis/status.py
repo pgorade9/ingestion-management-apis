@@ -11,8 +11,10 @@ status_router = APIRouter(tags=["Status publish and Retreive"])
 env_list = [key for key in keyvault.keys() if
             isinstance(keyvault[key], dict) and keyvault[key].get("data_partition_id") is not None]
 
-data_partition_list = list({keyvault[key].get("data_partition_id") for key in keyvault.keys() if
-                            isinstance(keyvault[key], dict) and keyvault[key].get("data_partition_id") is not None})
+data_partition_list = set()
+for key in keyvault.keys():
+    if isinstance(keyvault[key], dict) and keyvault[key].get("data_partition_id") not in [None,""]:
+        data_partition_list.add(*keyvault.get(key).get("data_partitions"))
 
 
 @status_router.post("/api/status-publisher/v1/status")
