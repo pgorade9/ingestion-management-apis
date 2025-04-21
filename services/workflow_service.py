@@ -76,3 +76,34 @@ def register_workflow(env, dag):
     else:
         msg = f"Error occurred while registering workflows {url=}. {response.text}"
         return {"msg": msg}
+
+
+def get_workflow_payload(env, data_partition_id, dag, file_id):
+    print("Creating Workflow Payload ***************************")
+    print(f"{dag=}")
+    workflow_payload = {
+        "executionContext": {
+            "dataPartitionId": f"{data_partition_id}",
+            "id": f"{file_id}"
+        }
+    }
+
+
+def trigger_workflow(env, data_partition_id, dag, file_id):
+    url = f"{keyvault[env]['seds_dns_host']}/api/workflow/v1/workflow"
+
+    payload = get_workflow_payload(env, data_partition_id, dag, file_id)
+
+    headers = {
+        "Authorization": get_token(env),
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "data-partition-id": data_partition_id
+    }
+    response = requests.request("POST", url, headers=headers, json=payload)
+    if response.status_code == 200:
+        response_json = response.json()
+        return response_json
+    else:
+        msg = f"Error occurred while triggering workflow {url=}. {response.text}"
+        return {"msg": msg}
