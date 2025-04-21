@@ -14,6 +14,7 @@ def fetch_resource(region, env, data_partition, app_code, resource_key):
         "data-partition-id": data_partition,
         "appkey": keyvault["prod-api-key"]
     }
+
     response = requests.request("GET", url=url, headers=headers)
     if response.status_code == 200:
         response_json = response.json()
@@ -33,6 +34,7 @@ def fetch_resources(region, env, data_partition, app_code):
         "data-partition-id": data_partition,
         "appkey": keyvault["prod-api-key"]
     }
+    print(f"{headers=}")
     response = requests.request("GET", url=url, headers=headers)
     if response.status_code == 200:
         response_json = response.json()

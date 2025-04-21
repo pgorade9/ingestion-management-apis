@@ -4,14 +4,14 @@ from configuration import keyvault
 from utils.token_utils import get_token
 
 
-def get_workflows(env):
+def get_workflows(env, data_partition):
     url = f"{keyvault[env]['seds_dns_host']}/api/workflow/v1/workflow"
     payload = ""
     headers = {
         "Authorization": get_token(env),
         "Content-Type": "application/json",
         "Accept": "application/json",
-        "data-partition-id": keyvault[env]['data_partition_id']
+        "data-partition-id": data_partition
     }
     response = requests.request("GET", url, data=payload, headers=headers)
     if response.status_code == 200:
@@ -23,14 +23,14 @@ def get_workflows(env):
         return {"msg": msg}
 
 
-def get_workflow(env, dag):
+def get_workflow(env, dag, data_partition):
     url = f"{keyvault[env]['seds_dns_host']}/api/workflow/v1/workflow/{dag}"
     payload = ""
     headers = {
         "Authorization": get_token(env),
         "Content-Type": "application/json",
         "Accept": "application/json",
-        "data-partition-id": keyvault[env]['data_partition_id']
+        "data-partition-id": data_partition
     }
     response = requests.request("GET", url, data=payload, headers=headers)
     if response.status_code == 200:

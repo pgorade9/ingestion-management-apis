@@ -4,7 +4,7 @@ from configuration import keyvault
 from utils.token_utils import get_token
 
 
-def get_groups(env):
+def get_groups(env, data_partition):
     url = f"{keyvault[env]['adme_dns_host']}/api/entitlements/v2/groups"
     querystring = {"type": "DATA", "user": "data.default.owners@qcazadmedev-dp1.dataservices.energy"}
     payload = ""
@@ -12,7 +12,7 @@ def get_groups(env):
         "Authorization": get_token(env),
         "Content-Type": "application/json",
         "Accept": "application/json",
-        "data-partition-id": keyvault[env]['data_partition_id']
+        "data-partition-id": data_partition
     }
     response = requests.request("GET", url, data=payload, headers=headers, params=querystring)
     if response.status_code == 200:
@@ -24,7 +24,7 @@ def get_groups(env):
         return {"msg": msg}
 
 
-def get_members_groups(user, env, member_type):
+def get_members_groups(user, env, data_partition, member_type):
     url = f"{keyvault[env]["adme_dns_host"]}/api/entitlements/v2/members/{user}/groups"
     payload = ""
     params = {"type": member_type}
@@ -32,7 +32,7 @@ def get_members_groups(user, env, member_type):
         "Authorization": get_token(env),
         "Content-Type": "application/json",
         "Accept": "application/json",
-        "data-partition-id": keyvault[env]['data_partition_id']
+        "data-partition-id": data_partition
     }
     response = requests.request("GET", url, data=payload, headers=headers, params=params)
     if response.status_code == 200:
