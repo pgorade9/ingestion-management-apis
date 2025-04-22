@@ -6,7 +6,7 @@ from configuration import keyvault
 from models.data_models import StatusPayload, StatusQuery
 from services import status_service
 
-status_router = APIRouter(tags=["Status publish and Retreive"])
+status_router = APIRouter(tags=["Status Publisher/Processor"])
 
 env_list = [key for key in keyvault.keys() if
             isinstance(keyvault[key], dict) and keyvault[key].get("data_partition_id") is not None]
