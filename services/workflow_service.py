@@ -1,3 +1,5 @@
+import json
+
 import requests
 
 from configuration import keyvault
@@ -87,10 +89,11 @@ def get_workflow_payload(env, data_partition_id, dag, file_id):
             "id": f"{file_id}"
         }
     }
+    return workflow_payload
 
 
 def trigger_workflow(env, data_partition_id, dag, file_id):
-    url = f"{keyvault[env]['seds_dns_host']}/api/workflow/v1/workflow"
+    url = f"{keyvault[env]['seds_dns_host']}/api/workflow/v1/workflow/{dag}/workflowRun"
 
     payload = get_workflow_payload(env, data_partition_id, dag, file_id)
 
@@ -100,7 +103,8 @@ def trigger_workflow(env, data_partition_id, dag, file_id):
         "Accept": "application/json",
         "data-partition-id": data_partition_id
     }
-    response = requests.request("POST", url, headers=headers, json=payload)
+
+    response = requests.request("POST", url, headers=headers,json=payload)
     if response.status_code == 200:
         response_json = response.json()
         return response_json

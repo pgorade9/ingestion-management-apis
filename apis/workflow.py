@@ -57,5 +57,5 @@ def register_other_workflow(env: Literal[*env_list] = Query(...),
 def trigger_workflow(env: Literal[*env_list] = Query(...),
                      data_partition: Literal[*data_partition_list] = Query(...),
                      dag: Literal[*dag_list] = Query(...),
-                     file_id: str = ""):
+                     file_id: str = "tknxchange:dataset--File.Generic:04ca232a-554c-4d90-962a-d296506d6ba8"):
     return workflow_service.trigger_workflow(env, data_partition, dag, file_id)
