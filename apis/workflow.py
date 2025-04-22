@@ -47,12 +47,6 @@ def register_workflow(env: Literal[*env_list] = Query(...),
     return workflow_service.register_workflow(env, dag)
 
 
-@workflow_router.post("/other_workflow", description="Register Other Workflows")
-def register_other_workflow(env: Literal[*env_list] = Query(...),
-                            dag: Literal[*dag_list] = Query(...)):
-    return workflow_service.register_workflow(env, dag)
-
-
 @workflow_router.post("/trigger_workflow")
 def trigger_workflow(env: Literal[*env_list] = Query(...),
                      data_partition: Literal[*data_partition_list] = Query(...),
