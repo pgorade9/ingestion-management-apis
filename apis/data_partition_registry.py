@@ -6,7 +6,7 @@ from configuration import keyvault
 from models.data_models import ResourceValue
 from services import data_partition_registry
 
-data_partition_router = APIRouter(prefix="/ccm/dataPartitionRegistry/v2", tags=["Data partition registry apis"])
+data_partition_router = APIRouter(prefix="/ccm/dataPartitionRegistry/v2", tags=["Data Partition Registry apis"])
 
 env_list = [key for key in keyvault.keys() if
             isinstance(keyvault[key], dict) and keyvault[key].get("data_partition_id") is not None]
