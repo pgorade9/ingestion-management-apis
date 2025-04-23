@@ -23,12 +23,13 @@ def get_groups(env: Literal[*env_list] = Query(...),
 
 
 @ent_router.get("/compare_groups")
-def compare_groups(env_base: Literal[*env_list] = Query(...),
-                   data_partition_base: Literal[*data_partition_list] = Query(...),
-                   env_test: Literal[*env_list] = Query(...),
-                   data_partition_test: Literal[*data_partition_list] = Query(...)
+def compare_groups(env_first: Literal[*env_list] = Query(...),
+                   data_partition_first: Literal[*data_partition_list] = Query(...),
+                   env_second: Literal[*env_list] = Query(...),
+                   data_partition_second: Literal[*data_partition_list] = Query(...),
+                   base_first: bool = True
                    ):
-    return entitlements_service.compare_groups(env_base, data_partition_base, env_test, data_partition_test)
+    return entitlements_service.compare_groups(env_first, data_partition_first, env_second, data_partition_second, base_first)
 
 
 @ent_router.get("/members/{user}/groups",

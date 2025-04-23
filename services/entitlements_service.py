@@ -24,8 +24,9 @@ def get_groups(env, data_partition):
         return {"msg": msg}
 
 
-def compare_groups(env_base, data_partition_base,env_test, data_partition_test):
-    envs = {env_base:data_partition_base, env_test:data_partition_test}
+def compare_groups(env_first: str, data_partition_first: str, env_second: str, data_partition_second: str,
+                   base_first=True):
+    envs = {env_first: data_partition_first, env_second: data_partition_second}
     groups = {}
     for item in envs.items():
         print(f"{item[0]=}")
@@ -41,15 +42,26 @@ def compare_groups(env_base, data_partition_base,env_test, data_partition_test):
         response = requests.request("GET", url, data=payload, headers=headers, params=querystring)
         if response.status_code == 200:
             response_json = response.json()
+
             entitlements = [key['name'] for key in response_json['groups']]
             print(f"{entitlements=}")
-            groups[item[0]]=entitlements
+            groups[item[0]] = entitlements
         else:
             msg = f"Error occurred while fetching entitlements with {url=}. {response.text}"
             return {"msg": msg}
-    group_difference = [item for item in groups[env_base] if item not in groups[env_test]]
-    group_difference.sort()
-    return group_difference
+    group_difference = [item for item in groups[env_first] if item not in groups[env_second]] \
+        if base_first else \
+        [item for item in groups[env_second] if item not in groups[env_first]]
+    data_entitlements = [i for i in group_difference if i.startswith('data')]
+    service_entitlements = [i for i in group_difference if i.startswith('service')]
+    users_entitlements = [i for i in group_difference if i.startswith('users')]
+    data_entitlements.sort()
+    service_entitlements.sort()
+    users_entitlements.sort()
+    grouped_entitlement_differences = {'data': data_entitlements,
+                                       'service': service_entitlements,
+                                       'users': users_entitlements}
+    return grouped_entitlement_differences
 
 
 def get_members_groups(user, env, data_partition, member_type):
@@ -73,4 +85,4 @@ def get_members_groups(user, env, data_partition, member_type):
 
 
 if __name__ == "__main__":
-    compare_groups("prod-uscvn-ltops", "dev-chevron-corporation", "prod-euqn-ltops","data")
+    compare_groups("prod-uscvn-ltops", "dev-chevron-corporation", "prod-euqn-ltops", "data")
