@@ -15,10 +15,20 @@ for key in keyvault.keys():
     if isinstance(keyvault[key], dict) and keyvault[key].get("data_partition_id") not in [None, ""]:
         data_partition_list.update(keyvault.get(key).get("data_partitions"))
 
+
 @ent_router.get("/groups")
 def get_groups(env: Literal[*env_list] = Query(...),
                data_partition: Literal[*data_partition_list] = Query(...)):
     return entitlements_service.get_groups(env, data_partition)
+
+
+@ent_router.get("/compare_groups")
+def compare_groups(env_base: Literal[*env_list] = Query(...),
+                   data_partition_base: Literal[*data_partition_list] = Query(...),
+                   env_test: Literal[*env_list] = Query(...),
+                   data_partition_test: Literal[*data_partition_list] = Query(...)
+                   ):
+    return entitlements_service.compare_groups(env_base, data_partition_base, env_test, data_partition_test)
 
 
 @ent_router.get("/members/{user}/groups",
