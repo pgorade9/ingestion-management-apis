@@ -14,7 +14,7 @@ def get_session(env: str, data_partition_id: str, user_id: str):
 
     headers = {
         "content-type": "application/json",
-        "sToken": base64.b64encode(f"{user_id}:{keyvault[env]['client_id']}:3600".encode("utf-8")).decode("utf-8"),
+        "sToken": base64.b64encode(f"{user_id}:{keyvault[env]['client_id']}:3600".encode("utf-8")).decode("utf-8") if user_id not in [None, ""] else base64.b64encode(f"{keyvault[env]['client_id']}@delfiserviceaccount.slb.com:{keyvault[env]['client_id']}:3600".encode("utf-8")).decode("utf-8"),
         "data-partition-id": data_partition_id,
         "secretAuthorization": f"Basic {base64.b64encode(f"{keyvault[env]['client_id']}:{keyvault[env]['client_secret']}".encode("utf-8")).decode("utf-8")}",
         # "audience": f"{keyvault[env]['client_id']} {keyvault[env]['scope']}",
@@ -35,7 +35,7 @@ def get_session(env: str, data_partition_id: str, user_id: str):
         print(f"{msg=}")
 
 
-def get_endpoint_id(env:str, data_partition: str):
+def get_endpoint_id(env: str, data_partition: str):
     url = f"https://api.delfi.slb.com/ccm/dataPartitionList/v2/dataPartitions/{data_partition}"
 
     headers = {
