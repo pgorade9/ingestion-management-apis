@@ -26,3 +26,10 @@ class QueryParams(BaseModel):
 
 class StatusQuery(BaseModel):
     statusQuery: QueryParams
+
+
+class SearchQuery(BaseModel):
+    kind: str = "admedev01-dp4:test:shapefile:1.0.0"
+    query: str = "id:admedev01-dp4\\:*\\:*"
+    returnedFields: List[str] = ["id", "kind"]
+    limit: int = 200
