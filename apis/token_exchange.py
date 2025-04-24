@@ -19,7 +19,7 @@ for key in keyvault.keys():
 @token_exchange_router.get("/workflow/getSession")
 def get_session(env: Literal[*env_list] = Query(...),
                 data_partition_id: Literal[*data_partition_list] = Query(...),
-                user_id: str = ""):
+                user_id: str = "03a6a453a1374918bc34d5eaff7ee614@delfiserviceaccount.slb.com"):
     return token_exchange_service.get_session(env, data_partition_id, user_id)
 
 

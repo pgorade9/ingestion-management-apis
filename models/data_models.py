@@ -29,7 +29,7 @@ class StatusQuery(BaseModel):
 
 
 class SearchQuery(BaseModel):
-    kind: str = "admedev01-dp4:test:shapefile:1.0.0"
-    query: str = "id:admedev01-dp4\\:*\\:*"
+    kind: str = f"dev-chevron-corporation:test:shapefile:1.0.0"
+    query: str = "id:dev-chevron-corporation\\:*\\:*"
     returnedFields: List[str] = ["id", "kind"]
     limit: int = 200

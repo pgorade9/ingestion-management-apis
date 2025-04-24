@@ -27,7 +27,7 @@ def search_entire_kind(env, data_partition, search_query: SearchQuery):
     payload = search_query.model_dump()
     print(payload)
     results = []
-    limit = 1000
+    limit = search_query.limit
     offset = 0
     try:
         while True:
@@ -40,7 +40,7 @@ def search_entire_kind(env, data_partition, search_query: SearchQuery):
                 response_json = response.json()
                 if response.status_code == 200:
                     print(f"Search query successful")
-                    print(f"{response_json=}")
+                    # print(f"{response_json=}")
                     results.append(response_json['results'])
                     offset += limit
                     if len(response_json['results'])<limit:
