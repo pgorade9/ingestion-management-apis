@@ -33,7 +33,8 @@ def compare_groups(env_first: Literal[*env_list] = Query(...),
 
 
 @ent_router.get("/members/{user}/groups",
-                description="data.default.owners@domain, pgorade@slb.com, users.datalake.editors@arm-perf.dataservices.energy")
+                description="data.default.owners@domain, pgorade@slb.com, "
+                            "users.datalake.editors@arm-perf.dataservices.energy")
 def get_members_groups(user: str = "user.datalake.admins@domain",
                        env: Literal[*env_list] = Query(...),
                        data_partition: Literal[*data_partition_list] = Query(...),
