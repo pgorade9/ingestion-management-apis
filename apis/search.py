@@ -31,8 +31,16 @@ for key in keyvault.keys():
 
 
 @search_router.post("/search")
-def get_workflows(
+def search_records(
         search_query: SearchQuery,
         env: Literal[*env_list] = Query(...),
         data_partition: Literal[*data_partition_list] = Query(...)):
     return search_service.search_entire_kind(env, data_partition, search_query)
+
+
+@search_router.post("/search_ingested_records")
+def search_ingested_records(
+        env: Literal[*env_list] = Query(...),
+        data_partition: Literal[*data_partition_list] = Query(...),
+        dag: Literal[*dag_list] = Query(...)):
+    return search_service.search_with_fixed_query(env, data_partition, dag)
