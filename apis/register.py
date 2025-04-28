@@ -2,10 +2,9 @@ from typing import Literal
 
 from fastapi import APIRouter, Query
 
-from models.data_models import CreateSubscriptionPayload
-from services import workflow_service, register_service
-
 from configuration import keyvault
+from models.data_models import CreateSubscriptionPayload
+from services import register_service
 
 register_router = APIRouter(prefix="/api/register/v1", tags=["Register apis"])
 

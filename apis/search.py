@@ -2,10 +2,9 @@ from typing import Literal
 
 from fastapi import APIRouter, Query
 
-from models.data_models import SearchQuery
-from services import workflow_service, search_service
-
 from configuration import keyvault
+from models.data_models import SearchQuery
+from services import search_service
 
 search_router = APIRouter(prefix="/api/search/v1", tags=["Search apis"])
 
