@@ -30,15 +30,25 @@ for key in keyvault.keys():
 
 
 @register_router.post("/subscription")
-def create_subscription(payload: CreateSubscriptionPayload,
-                        env: Literal[*env_list] = Query(...),
-                        data_partition: Literal[*data_partition_list] = Query(...)):
-    return register_service.create_subscription(env, data_partition, payload)
+def create_subscription(env: Literal[*env_list] = Query(...),
+                        data_partition: Literal[*data_partition_list] = Query(...),
+                        topic_name: Literal["statuschangedtopic", "recordstopic", "schemachangedtopic"] = Query(...),
+                        push_endpoint_domain: Literal["osdu", "lightops"] = Query(...),
+                        hmac_key: str = "17062990c29797c20004f224b93cec"):
+    return register_service.create_subscription(env, data_partition, topic_name, push_endpoint_domain, hmac_key)
+
+
+@register_router.get("/subscription/{id}")
+def get_subscription(env: Literal[*env_list] = Query(...),
+                     data_partition: Literal[*data_partition_list] = Query(...),
+                     topic_name: Literal["statuschangedtopic", "recordstopic", "schemachangedtopic"] = Query(...),
+                     push_endpoint_domain: Literal["osdu", "lightops"] = Query(...)):
+    return register_service.get_subscription(env, data_partition, topic_name, push_endpoint_domain)
 
 
 @register_router.delete("/subscription/{id}")
 def delete_subscription(env: Literal[*env_list] = Query(...),
                         data_partition: Literal[*data_partition_list] = Query(...),
-                        topic_name: str = "statuschangedtopic",
-                        push_endpoint: str = "https://dataworkflowservices-evd-sdfs.app.evd-2.lightops.slb.com/api/listener-service/partition/admedev01-dp2/topic/statuschangedtopic"):
-    return register_service.delete_subscription(env, data_partition, topic_name, push_endpoint)
+                        topic_name: Literal["statuschangedtopic", "recordstopic", "schemachangedtopic"] = Query(...),
+                        push_endpoint_domain: Literal["osdu", "lightops"] = Query(...)):
+    return register_service.delete_subscription(env, data_partition, topic_name, push_endpoint_domain)
