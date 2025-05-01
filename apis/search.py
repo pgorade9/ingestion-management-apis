@@ -29,7 +29,7 @@ for key in keyvault.keys():
         data_partition_list.update(keyvault.get(key).get("data_partitions"))
 
 
-@search_router.post("/search")
+@search_router.post("/search",description="User can define search query and kind only")
 def search_records(
         search_query: SearchQuery,
         env: Literal[*env_list] = Query(...),
@@ -37,7 +37,8 @@ def search_records(
     return search_service.search_entire_kind(env, data_partition, search_query)
 
 
-@search_router.post("/search_ingested_records")
+@search_router.post("/search_ingested_records", description="This will search records based on pre-decided kind and record id "
+                                                            "starting with data-partition-id")
 def search_ingested_records(
         env: Literal[*env_list] = Query(...),
         data_partition: Literal[*data_partition_list] = Query(...),
