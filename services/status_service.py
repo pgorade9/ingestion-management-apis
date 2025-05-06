@@ -1,4 +1,5 @@
 import requests
+from fastapi import HTTPException
 
 from configuration import keyvault
 from models.data_models import StatusPayload, StatusQuery
@@ -43,10 +44,11 @@ def get_status(env: str, data_partition: str, status_filter: StatusQuery):
     response = requests.request("POST", url, headers=headers, json=payload)
     if response.status_code == 200:
         return response.json()
-    elif response.status_code in [i for i in range(400, 500)]:
-        response_json = response.json()
-        msg = f"Bad Request for {url=}. {response_json=}"
-        return {"msg": msg}
+    elif response.status_code in [400, 404, 409]:
+        msg = response.json()
+        detail_msg = dict(msg=msg, url=url, headers=headers)
+        raise HTTPException(status_code=response.status_code, detail=detail_msg)
     else:
-        msg = f"Error occurred while publishing status {url=}. {response.text}"
-        return {"msg": msg}
+        msg = response.text
+        detail_msg = dict(msg=msg, url=url, headers=headers)
+        raise HTTPException(status_code=response.status_code, detail=detail_msg)
