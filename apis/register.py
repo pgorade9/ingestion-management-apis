@@ -53,12 +53,11 @@ def create_subscription(env: Literal[*env_list] = Query(...),
                         subscription_domain: Literal["osdu", "lightops"] = Query(...),
                         listener_service_name: Literal[*listener_service_list] = Query(...),
                         topic_name: Literal[*topic_list] = Query(...),
-                        push_endpoint_domain: Literal["osdu", "lightops"] = Query(...),
                         push_endpoint_namespace: Literal["sdfs", "dw"] = Query(default="dw"),
 
                         hmac_key: str = "5da75ef1e14df685672db02ea26a82"):
     return register_service.create_subscription(env, data_partition, subscription_domain, listener_service_name,
-                                                topic_name, push_endpoint_domain, push_endpoint_namespace, hmac_key)
+                                                topic_name, push_endpoint_namespace, hmac_key)
 
 
 @register_router.get("/subscription/{id}")
@@ -67,10 +66,9 @@ def get_subscription(env: Literal[*env_list] = Query(...),
                      subscription_domain: Literal["osdu", "lightops"] = Query(...),
                      listener_service_name: Literal[*listener_service_list] = Query(...),
                      topic_name: Literal[*topic_list] = Query(...),
-                     push_endpoint_domain: Literal["osdu", "lightops"] = Query(...),
                      push_endpoint_namespace: Literal["sdfs", "dw"] = Query(default="dw")):
     return register_service.get_subscription(env, data_partition, subscription_domain, listener_service_name,
-                                             topic_name, push_endpoint_domain, push_endpoint_namespace)
+                                             topic_name, push_endpoint_namespace)
 
 
 @register_router.get("/subscription", description="Displays the HMAC secret value")

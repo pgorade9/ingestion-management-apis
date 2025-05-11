@@ -44,8 +44,12 @@ def create_subscription_with_push_endpoint(env: str, data_partition: str, subscr
 
 def create_subscription(env: str, data_partition: str, subscription_domain: str, listener_service_name: str,
                         topic_name: str,
-                        push_endpoint_domain: str, push_endpoint_namespace: str, HMAC_Key: str):
-    PUSH_ENDPOINT_DNS_HOST = keyvault[env]["dw_dns_host"] if push_endpoint_domain == "osdu" else keyvault[env][
+                        push_endpoint_namespace: str, HMAC_Key: str):
+    REGISTER_SERVICE_DNS_HOST = keyvault[env]["adme_dns_host"] if subscription_domain == "osdu" else keyvault[env][
+        "seds_dns_host"]
+    url = f"{REGISTER_SERVICE_DNS_HOST}/api/register/v1/subscription"
+
+    PUSH_ENDPOINT_DNS_HOST = keyvault[env]["dw_dns_host"] if push_endpoint_namespace == "dw" else keyvault[env][
         "seds_dns_host"]
     base_path = f"/dm/{listener_service_name}/events/v1/statusTopic/{data_partition}" if push_endpoint_namespace == "dw" else f"/api/{listener_service_name}/partition/{data_partition}/topic/{topic_name}"
     push_endpoint = f"{PUSH_ENDPOINT_DNS_HOST}{base_path}"
@@ -54,9 +58,7 @@ def create_subscription(env: str, data_partition: str, subscription_domain: str,
                                                             pushEndpoint=push_endpoint,
                                                             secret=HMACSecret(secretType="HMAC", value=HMAC_Key),
                                                             topic=topic_name)
-    REGISTER_SERVICE_DNS_HOST = keyvault[env]["adme_dns_host"] if subscription_domain == "osdu" else keyvault[env][
-        "seds_dns_host"]
-    url = f"{REGISTER_SERVICE_DNS_HOST}/api/register/v1/subscription"
+
     headers = {
         "Authorization": get_token(env),
         "Content-Type": "application/json",
@@ -81,9 +83,8 @@ def create_subscription(env: str, data_partition: str, subscription_domain: str,
 
 
 def get_subscription(env: str, data_partition: str, subscription_domain: str, listener_service_name: str,
-                     topic_name: str,
-                     push_endpoint_domain: str, push_endpoint_namespace: str):
-    PUSH_ENDPOINT_DNS_HOST = keyvault[env]["dw_dns_host"] if push_endpoint_domain == "osdu" else keyvault[env][
+                     topic_name: str, push_endpoint_namespace: str):
+    PUSH_ENDPOINT_DNS_HOST = keyvault[env]["dw_dns_host"] if push_endpoint_namespace == "dw" else keyvault[env][
         "seds_dns_host"]
     base_path = f"/dm/{listener_service_name}/events/v1/statusTopic/{data_partition}" if push_endpoint_namespace == "dw" else f"/api/{listener_service_name}/partition/{data_partition}/topic/{topic_name}"
     push_endpoint = f"{PUSH_ENDPOINT_DNS_HOST}{base_path}"
