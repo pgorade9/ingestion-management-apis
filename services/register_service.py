@@ -49,7 +49,8 @@ def create_subscription(env: str, data_partition: str, subscription_domain: str,
         "seds_dns_host"]
     url = f"{REGISTER_SERVICE_DNS_HOST}/api/register/v1/subscription"
 
-    PUSH_ENDPOINT_DNS_HOST = keyvault[env]["dw_dns_host"] if push_endpoint_namespace == "dw" else keyvault[env][
+    PUSH_ENDPOINT_DNS_HOST = keyvault[env]["dw_dns_host"][data_partition] if push_endpoint_namespace == "dw" else \
+    keyvault[env][
         "seds_dns_host"]
     base_path = f"/dm/{listener_service_name}/events/v1/statusTopic/{data_partition}" if push_endpoint_namespace == "dw" else f"/api/{listener_service_name}/partition/{data_partition}/topic/{topic_name}"
     push_endpoint = f"{PUSH_ENDPOINT_DNS_HOST}{base_path}"
@@ -84,7 +85,8 @@ def create_subscription(env: str, data_partition: str, subscription_domain: str,
 
 def get_subscription(env: str, data_partition: str, subscription_domain: str, listener_service_name: str,
                      topic_name: str, push_endpoint_namespace: str):
-    PUSH_ENDPOINT_DNS_HOST = keyvault[env]["dw_dns_host"] if push_endpoint_namespace == "dw" else keyvault[env][
+    PUSH_ENDPOINT_DNS_HOST = keyvault[env]["dw_dns_host"][data_partition] if push_endpoint_namespace == "dw" else \
+    keyvault[env][
         "seds_dns_host"]
     base_path = f"/dm/{listener_service_name}/events/v1/statusTopic/{data_partition}" if push_endpoint_namespace == "dw" else f"/api/{listener_service_name}/partition/{data_partition}/topic/{topic_name}"
     push_endpoint = f"{PUSH_ENDPOINT_DNS_HOST}{base_path}"
@@ -142,9 +144,12 @@ def get_subscription_notification_id(env: str, data_partition: str, notification
 
 
 def delete_subscription(env: str, data_partition: str, listener_service_name: str, topic_name: str,
-                        push_endpoint_domain: str):
-    DNS_HOST = keyvault[env]["adme_dns_host"] if push_endpoint_domain == "osdu" else keyvault[env]["seds_dns_host"]
-    push_endpoint = f"{DNS_HOST}/api/{listener_service_name}/partition/{data_partition}/topic/{topic_name}"
+                        push_endpoint_namespace: str):
+    PUSH_ENDPOINT_DNS_HOST = keyvault[env]["dw_dns_host"][data_partition] if push_endpoint_namespace == "dw" else \
+        keyvault[env]["seds_dns_host"]
+    base_path = f"/dm/{listener_service_name}/events/v1/statusTopic/{data_partition}" if push_endpoint_namespace == "dw" else f"/api/{listener_service_name}/partition/{data_partition}/topic/{topic_name}"
+    push_endpoint = f"{PUSH_ENDPOINT_DNS_HOST}{base_path}"
+
     subscription_id = base64.b64encode(f"{topic_name}{push_endpoint}".encode()).decode()
     url = f"{keyvault[env]["adme_dns_host"]}/api/register/v1/subscription/{subscription_id}"
 
@@ -157,20 +162,31 @@ def delete_subscription(env: str, data_partition: str, listener_service_name: st
     }
 
     response = requests.request("DELETE", url=url, headers=headers)
-    if response.status_code == 204:
+
+    if response.status_code in [200,204]:
         msg = f"Deleted {topic_name} subscription successfully."
         return JSONResponse(status_code=204, content={"msg": msg})
+    elif response.status_code in [400, 404, 409]:
+        msg = response.json()["message"]
+        detail_msg = dict(msg=msg, url=url, headers=headers)
+        raise HTTPException(status_code=response.status_code, detail=detail_msg)
     else:
-        msg = f"Error occurred while deleting subscription using {url=}. {response.status_code=} {response.text}"
-        return {"msg": msg}
+        msg = response.text
+        detail_msg = dict(msg=msg, url=url, headers=headers)
+        raise HTTPException(status_code=response.status_code, detail=detail_msg)
 
 
-def update_secret(hmac_secret: HMACSecret, env: str, data_partition: str, listener_service_name: str, topic_name: str,
-                  push_endpoint_domain: str):
-    DNS_HOST = keyvault[env]["adme_dns_host"] if push_endpoint_domain == "osdu" else keyvault[env]["seds_dns_host"]
-    push_endpoint = f"{DNS_HOST}/api/{listener_service_name}/partition/{data_partition}/topic/{topic_name}"
+def update_secret(hmac_secret: HMACSecret, env: str, data_partition: str, subscription_domain:str, listener_service_name: str, topic_name: str,
+                  push_endpoint_namespace: str):
+    PUSH_ENDPOINT_DNS_HOST = keyvault[env]["dw_dns_host"][data_partition] if push_endpoint_namespace == "dw" else \
+        keyvault[env]["seds_dns_host"]
+    base_path = f"/dm/{listener_service_name}/events/v1/statusTopic/{data_partition}" if push_endpoint_namespace == "dw" else f"/api/{listener_service_name}/partition/{data_partition}/topic/{topic_name}"
+    push_endpoint = f"{PUSH_ENDPOINT_DNS_HOST}{base_path}"
+
     subscription_id = base64.b64encode(f"{topic_name}{push_endpoint}".encode()).decode()
-    url = f"{keyvault[env]["adme_dns_host"]}/api/register/v1/subscription/{subscription_id}"
+    REGISTER_SERVICE_DNS_HOST = keyvault[env]["adme_dns_host"] if subscription_domain == "osdu" else keyvault[env][
+        "seds_dns_host"]
+    url = f"{REGISTER_SERVICE_DNS_HOST}/api/register/v1/subscription/{subscription_id}/secret"
 
     print(f"{subscription_id=}")
     headers = {

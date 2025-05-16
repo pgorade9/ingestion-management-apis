@@ -84,19 +84,21 @@ def delete_subscription(env: Literal[*env_list] = Query(...),
                         data_partition: Literal[*data_partition_list] = Query(...),
                         listener_service_name: Literal[*listener_service_list] = Query(...),
                         topic_name: Literal[*topic_list] = Query(...),
-                        push_endpoint_domain: Literal["osdu", "lightops"] = Query(...)):
+                        push_endpoint_namespace: Literal["sdfs", "dw"] = Query(...)):
     return register_service.delete_subscription(env, data_partition, listener_service_name, topic_name,
-                                                push_endpoint_domain)
+                                                push_endpoint_namespace)
 
 
 @register_router.put("/subscription/{id}")
 def upddate_hmac(hmac_secret: HMACSecret, env: Literal[*env_list] = Query(...),
                  data_partition: Literal[*data_partition_list] = Query(...),
+                 subscription_domain: Literal["osdu", "lightops"] = Query(...),
                  listener_service_name: Literal[*listener_service_list] = Query(...),
                  topic_name: Literal[*topic_list] = Query(...),
-                 push_endpoint_domain: Literal["osdu", "lightops"] = Query(...)):
-    return register_service.update_secret(hmac_secret, env, data_partition, listener_service_name, topic_name,
-                                          push_endpoint_domain)
+                 push_endpoint_namespace: Literal["sdfs", "dw"] = Query(...)):
+    return register_service.update_secret(hmac_secret, env, data_partition, subscription_domain, listener_service_name,
+                                          topic_name,
+                                          push_endpoint_namespace)
 
 
 @register_router.get("/push_endpoint", description="Ping Push Endpoint")
