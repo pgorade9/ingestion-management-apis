@@ -55,7 +55,8 @@ def create_subscription(env: Literal[*env_list] = Query(...),
                         topic_name: Literal[*topic_list] = Query(...),
                         push_endpoint_namespace: Literal["sdfs", "dw"] = Query(default="dw"),
 
-                        hmac_key: str = "5da75ef1e14df685672db02ea26a82"):
+                        hmac_key: str = Query("c37d3e8716c00dfc9c6abfbf7dd69d",description="USE DW HMAC FOR DW "
+                                                                                           "NAMESPACE")):
     return register_service.create_subscription(env, data_partition, subscription_domain, listener_service_name,
                                                 topic_name, push_endpoint_namespace, hmac_key)
 

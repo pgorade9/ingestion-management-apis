@@ -28,7 +28,7 @@ for key in keyvault.keys():
         data_partition_list.update(keyvault.get(key).get("data_partitions"))
 
 
-@workflow_router.get("/workflow")
+@workflow_router.get("/system/workflow")
 def get_workflows(env: Literal[*env_list] = Query(...),
                   data_partition: Literal[*data_partition_list] = Query(...)):
     return workflow_service.get_workflows(env, data_partition)
@@ -43,8 +43,22 @@ def get_workflow(env: Literal[*env_list] = Query(...),
 
 @workflow_router.post("/workflow")
 def register_workflow(env: Literal[*env_list] = Query(...),
-                      dag: Literal[*dag_list] = Query(...)):
-    return workflow_service.register_workflow(env, dag)
+                      dag: Literal[*dag_list, "all"] = Query(...),
+                      system: bool = True
+                      ):
+    return workflow_service.register_workflow(env, dag, system, )
+
+
+# @workflow_router.post("/workflow/system")
+# def register_workflow_system(env: Literal[*env_list] = Query(...),
+#                              dag: Literal[*dag_list] = Query(...)):
+#     return workflow_service.register_workflow_system(env, dag)
+#
+#
+# @workflow_router.post("/workflow")
+# def register_workflow_data_partition(env: Literal[*env_list] = Query(...),
+#                                      dag: Literal[*dag_list] = Query(...)):
+#     return workflow_service.register_workflow_data_partition(env, dag)
 
 
 @workflow_router.post("/trigger_workflow")
