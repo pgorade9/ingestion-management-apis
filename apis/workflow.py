@@ -43,10 +43,10 @@ def get_workflow(env: Literal[*env_list] = Query(...),
 
 @workflow_router.post("/workflow")
 def register_workflow(env: Literal[*env_list] = Query(...),
+                      data_partition: Literal[*data_partition_list, "system"] = Query(...),
                       dag: Literal[*dag_list, "all"] = Query(...),
-                      system: bool = True
                       ):
-    return workflow_service.register_workflow(env, dag, system, )
+    return workflow_service.register_workflow(env, data_partition, dag)
 
 
 # @workflow_router.post("/workflow/system")

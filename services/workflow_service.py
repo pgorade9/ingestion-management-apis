@@ -55,7 +55,7 @@ def get_workflow(env, dag, data_partition):
         return {"msg": msg}
 
 
-def register_workflow(env, dag, system):
+def register_workflow(env, data_partition, dag):
     url = f"{keyvault[env]['seds_dns_host']}/api/workflow/v1/workflow/system"
     desc = {
         "shapefile_ingestor_wf_status_gsm": "Shapefile Ingestion",
@@ -69,8 +69,8 @@ def register_workflow(env, dag, system):
         "Content-Type": "application/json",
         "Accept": "application/json",
     }
-    if not system:
-        headers["data-partition-id"] = keyvault[env]['data_partition_id']
+    if data_partition != "system":
+        headers["data-partition-id"] = data_partition
         url = f"{keyvault[env]['seds_dns_host']}/api/workflow/v1/workflow"
     if dag == "all":
         print(f"Selected {dag=}")
@@ -96,18 +96,6 @@ def get_payload(dag, desc):
 
 
 def register_dag(url, headers, payload, dag):
-    # response = requests.request("POST", url, headers=headers, json=payload)
-    # if response.status_code == 200:
-    #     response_json = response.json()
-    #     # print(f"{response_json=}")
-    #     return response_json
-    # elif response.status_code == 409:
-    #     response_json = response.json()
-    #     msg = f"Conflict occurred while registering workflow on data-partition-id={keyvault[env]['data_partition_id']} at {url=}. {response_json.get("message")}"
-    #     return {"msg": msg}
-    # else:
-    #     msg = f"Error occurred while registering workflows {url=}. {response.text}"
-    #     return {"msg": msg}
     response = requests.request("POST", url=url, headers=headers, json=payload)
     if response.status_code == 200:
         response_json = response.json()
